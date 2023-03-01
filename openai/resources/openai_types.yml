@@ -1,0 +1,214 @@
+components:
+  schemas:
+    Models:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Model'
+    Model:
+      type: object
+      properties:
+        id:
+          type: string
+        object:
+          type: string
+        owned_by:
+          type: string
+    CompletionsRequest:
+      type: object
+      properties:
+        model:
+          type: string
+        prompt:
+          type: string
+        suffix:
+          type: string
+        max_tokens:
+          type: integer
+        temperature:
+          type: number
+        top_p:
+          type: number
+        n:
+          type: integer
+        stream:
+          type: boolean
+        logprobs:
+          type: integer
+        echo:
+          type: boolean
+        stop:
+          type: string
+        presence_penalty:
+          type: number
+        frequency_penalty:
+          type: number
+        best_of:
+          type: integer
+        user:
+          type: string
+      required:
+        - model
+    CompletionsResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        object:
+          type: string
+        created:
+          type: integer
+        model:
+          type: string
+        choices:
+          type: array
+          items:
+            type: object
+            properties:
+              text:
+                type: string
+              index:
+                type: integer
+              logprobs:
+                type: string
+              finish_reason:
+                type: string
+            required:
+              - text
+              - index              
+              - finish_reason
+        usage:
+          type: object
+          properties:
+            prompt_tokens:
+              type: integer
+            completion_tokens:
+              type: integer
+            total_tokens:
+              type: integer
+          required:
+            - prompt_tokens
+            - completion_tokens
+            - total_tokens
+      required:
+        - id
+        - object
+        - created
+        - model
+        - choices
+        - usage
+    EditsRequest:
+      type: object
+      required:
+        - model
+        - instruction
+      properties:
+        model:
+          type: string
+          description: ID of the model to use. You can use the text-davinci-edit-001 or code-davinci-edit-001 model with this endpoint.
+        input:
+          type: string
+          description: The input text to use as a starting point for the edit.
+          default: ''
+        instruction:
+          type: string
+          description: The instruction that tells the model how to edit the prompt.
+        n:
+          type: integer
+          description: How many edits to generate for the input and instruction.
+          default: 1
+        temperature:
+          type: number
+          description: What sampling temperature to use, between 0 and 2.
+          default: 1
+        top_p:
+          type: number
+          description: An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass.
+          default: 1
+    EditsResponse:
+      type: object
+      properties:
+        object:
+          type: string
+          enum:
+            - edit
+          description: Indicates that this is an edit object.
+        created:
+          type: integer
+          description: Unix timestamp indicating when the edit was created.
+        choices:
+          type: array
+          items:
+            type: object
+            properties:
+              text:
+                type: string
+                description: The edited text.
+              index:
+                type: integer
+                description: The index of the choice.
+          description: An array of edited text choices.
+        usage:
+          type: object
+          properties:
+            prompt_tokens:
+              type: integer
+              description: The number of tokens in the prompt.
+            completion_tokens:
+              type: integer
+              description: The number of tokens in the completion.
+            total_tokens:
+              type: integer
+              description: The total number of tokens used.
+          description: Object containing usage statistics.
+    ImageGenerationRequest:
+      type: object
+      properties:
+        prompt:
+          type: string
+          description: A text description of the desired image(s). The maximum length is 1000 characters.
+          minLength: 1
+          maxLength: 1000
+        n:
+          type: integer
+          description: The number of images to generate. Must be between 1 and 10.
+          minimum: 1
+          maximum: 10
+          default: 1
+        size:
+          type: string
+          description: The size of the generated images. Must be one of 256x256, 512x512, or 1024x1024.
+          enum: [256x256, 512x512, 1024x1024]
+          default: 1024x1024
+        response_format:
+          type: string
+          description: The format in which the generated images are returned. Must be one of url or b64_json.
+          enum: [url, b64_json]
+          default: url
+        user:
+          type: string
+          description: A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse.
+      required:
+        - prompt
+    ImageGenerationResponse:
+      type: object
+      properties:
+        created:
+          type: integer
+          description: Unix timestamp of when the image request was created
+        data:
+          type: array
+          description: An array of objects containing URLs to the generated images
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                description: The URL of a generated image
+                format: uri
+          minItems: 1
+      required:
+        - created
+        - data

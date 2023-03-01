@@ -1,0 +1,77 @@
+openapi: '3.0.2'
+info:
+  title: OpenAI
+  version: '1.0'
+servers:
+  - url: https://api.openai.com/v1
+paths:
+  /models:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'openai_types.yml#/components/schemas/Models'
+  /models/{model}:
+    get:
+      parameters:
+        - name: model
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'openai_types.yml#/components/schemas/Model'
+  /completions:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'openai_types.yml#/components/schemas/CompletionsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'openai_types.yml#/components/schemas/CompletionsResponse'
+  /edits:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'openai_types.yml#/components/schemas/EditsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'openai_types.yml#/components/schemas/EditsResponse'
+  /images/generations:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'openai_types.yml#/components/schemas/ImageGenerationRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: 'openai_types.yml#/components/schemas/ImageGenerationResponse'
+
+
+        
+    
